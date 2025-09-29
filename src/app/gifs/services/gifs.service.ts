@@ -6,24 +6,32 @@ import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
 import { map, Observable, tap } from 'rxjs';
 
-
 const GIF_KEY = 'gifs';
 
 const loadFromLocalStorage = () => {
-    const gifsFromToLocalStorage = localStorage.getItem(GIF_KEY) ?? '{}';
-    const gifs = JSON.parse(gifsFromToLocalStorage);
+  const gifsFromToLocalStorage = localStorage.getItem(GIF_KEY) ?? '{}';
+  const gifs = JSON.parse(gifsFromToLocalStorage);
 
-    console.log(gifs);
-    return gifs;
+  console.log(gifs);
+  return gifs;
 };
-
 
 @Injectable({ providedIn: 'root' })
 export class GifService {
   private http = inject(HttpClient);
 
   trendingGifs = signal<Gif[]>([]);
-  trendingGifsLoading = signal(true);
+  trendingGifsLoading = signal(false);
+  private trendingPage = signal(0);
+
+  trendingGifGroup = computed<Gif[][]>(() => {
+    const groups = [];
+    for (let i = 0; i < this.trendingGifs().length; i += 3) {
+      groups.push(this.trendingGifs().slice(i, i + 3)); // slice  para obtener un rango de la lista trendingGifs
+    }
+
+    return groups;
+  });
 
   searchHistory = signal<Record<string, Gif[]>>(loadFromLocalStorage()); // record es para tipar  un objeto cuando sus llaves son dinamicas en este caso el String (los textos de busqueda) con la llave.
   searchHistoryKeys = computed(() => Object.keys(this.searchHistory())); // computed es una señal computada, donde cada que cambie el this.searchHistory se dispara el computed
@@ -39,19 +47,26 @@ export class GifService {
   });
 
   loadTrendingGifs() {
+    if (this.trendingGifsLoading()) {
+      return;
+    }
+
+    this.trendingGifsLoading.set(true);
+
     // la peticion no se dispara hasta que se suscribe (.subscribe(...)
     this.http
       .get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
         params: {
           api_key: environment.giphyApikey,
           limit: 20,
+          offset: this.trendingPage() * 20,
         },
       })
       .subscribe((resp) => {
         const gifs = GifMapper.mapGiphyItemsToGiArray(resp.data);
-        this.trendingGifs.set(gifs);
+        this.trendingGifs.update((currentGifs) => [...currentGifs, ...gifs]);
+        this.trendingPage.update(page => page + 1);
         this.trendingGifsLoading.set(false);
-        console.log(gifs);
       });
   }
 

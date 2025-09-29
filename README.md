@@ -27,6 +27,10 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - HTTP Requests
 - Cache Management
 - Information Mapping
+- Preserve scroll state
+- Make scroll infinite
+- Masonry design
+- Debugging techniques and tools
 
 ## Configure the Gif API key
 

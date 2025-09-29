@@ -1,6 +1,36 @@
-# GifsApp
+<p align="center">
+  <a href="https://angular.dev/" target="blank"><img src="public/angular_gradient.png" width="120" alt="Angular Logo" /></a>
+</p>
+
+# GifsApp Angular
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+
+
+# Topics covered in the project
+
+- LazyLoad
+- Route Separation
+- Child Routes
+- Angular Environment Variables
+- Angular CLI
+- Inputs
+- Communication Between Components
+- Nested RouterOutlets
+- Signals
+- Component Properties
+- Tailwind
+- Dynamic Route Handling
+- Local Storage Handling
+- Observables to Signals
+- Component Reuse
+- HTTP Requests
+- Cache Management
+- Information Mapping
+
+## Configure the Gif API key
+
+Get the API key at https://developers.giphy.com/dashboard/ and configure the giphyApikey property with your API key of the environments (environments/environment.development.ts; environment.ts)
 
 ## Development server
 
@@ -57,3 +87,13 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+# Instalación de paquetes
+
+Para instalar las dependencias del proyecto, ejecuta el siguiente comando en la terminal desde la raíz del proyecto:
+
+```powershell
+npm install
+```
+
+Esto descargará e instalará todos los paquetes necesarios definidos en el archivo `package.json`.
